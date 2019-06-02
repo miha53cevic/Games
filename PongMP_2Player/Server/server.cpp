@@ -27,8 +27,6 @@ Server::PongServer::PongServer(unsigned short int port)
 
     m_ballVelocity.x = cosf(M_PI / 4);
     m_ballVelocity.y = sinf(M_PI / 4);
-
-    m_Score = 5;
 }
 
 void Server::PongServer::UpdateGame(float Speed)
@@ -79,7 +77,16 @@ void Server::PongServer::UpdateGame(float Speed)
         m_ballPos.x = m_ScreenSize.x / 2;
         m_ballPos.y = m_ScreenSize.y / 2;
 
-        m_Score--;
+        m_players[1].m_score++;
+    }
+    // Has the ball went outside the right boundry
+    else if (m_ballPos.x >= m_ScreenSize.x)
+    {
+        // Reset ball position to center of the screen
+        m_ballPos.x = m_ScreenSize.x / 2;
+        m_ballPos.y = m_ScreenSize.y / 2;
+
+        m_players[0].m_score++;
     }
 }
 
@@ -127,13 +134,13 @@ void Server::PongServer::SendData()
 
         if (i == 0)
         {
-            data << m_ballPos.x << m_ballPos.y << m_Score;
+            data << m_ballPos.x << m_ballPos.y << m_players[0].m_score << m_players[1].m_score;
             data << m_players[1].m_playerPos.x << m_players[1].m_playerPos.y;
         }
         if (i == 1)
         {
-            // Flip second player ballX position
-            data << m_ScreenSize.x - m_ballPos.x << m_ballPos.y << m_Score;
+            // Flip second player ballX position and flip scores because the player is on the left on his screen
+            data << m_ScreenSize.x - m_ballPos.x << m_ballPos.y << m_players[1].m_score << m_players[0].m_score;
             data << m_ScreenSize.x - 20 << m_players[0].m_playerPos.y;
         } 
 
@@ -153,6 +160,8 @@ bool Server::PongServer::WaitForPlayers(int timeout)
             std::cout << "Player "  <<           m_Connected            << " has joined!\n";
             std::cout << "Adress: " << m_players[m_Connected].m_adress  << "\n";
             std::cout << "Port: "   << m_players[m_Connected].m_port    << "\n";
+
+            m_players[m_Connected].m_score = 0;
 
             m_Connected++;
 

@@ -10,6 +10,7 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <math.h>
 
 struct Player
 {
@@ -17,6 +18,8 @@ struct Player
     sf::IpAddress       m_adress;
 
     unsigned short int  m_port;
+
+    unsigned int        m_score;
 };
 
 namespace Server
@@ -45,8 +48,7 @@ namespace Server
         sf::Vector2f m_ScreenSize;
 
         Player  m_players[2];
-
-        int     m_Score;
+        
         int     m_Connected;
 
         sf::Clock   m_clock;

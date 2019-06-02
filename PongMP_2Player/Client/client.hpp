@@ -32,6 +32,10 @@ private:
     sf::CircleShape     ball;
     sf::RectangleShape  player;
 
+    sf::Vector2f        lastPlayerPos;
+    
+    unsigned int        Scores[2];
+
     sf::RectangleShape  enemy;
 
     sf::Font font;
@@ -88,15 +92,16 @@ private:
                     ball.setPosition(x, y);
 
                     int score;
-                    if (data >> score)
+                    if (data >> Scores[0])
                     {
-                        text.setString(std::to_string(score));
-
-                        if (data >> x)
+                        if (data >> Scores[1])
                         {
-                            if (data >> y)
+                            if (data >> x)
                             {
-                                enemy.setPosition(x, y);
+                                if (data >> y)
+                                {
+                                    enemy.setPosition(x, y);
+                                }
                             }
                         }
                     }
@@ -104,27 +109,43 @@ private:
             }
 
             // Send player pos to server
-            data.clear();
-            data << player.getPosition().x  << player.getPosition().y;
-            handler.Send(data, *handler.getIPAdress(), *handler.getPort());
+            // only if the player has changed his position
+            if (lastPlayerPos != player.getPosition())
+            {
+                data.clear();
+                data << player.getPosition().x  << player.getPosition().y;
+                handler.Send(data, *handler.getIPAdress(), *handler.getPort());
+
+                // last send position
+                lastPlayerPos = player.getPosition();
+            }
         }
 
         // Controls
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
         {
-            player.move(0, -100.0f * elapsed.asSeconds());
+            if (player.getPosition().y >= 0)
+                player.move(0, -200.0f * elapsed.asSeconds());
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         {
-            player.move(0, 100.0f * elapsed.asSeconds());
+            if (player.getPosition().y + player.getSize().y < ScreenHeight())
+                player.move(0, 200.0f * elapsed.asSeconds());
         }
 
         // Drawing routines
         Draw(ball);
         Draw(player);
         Draw(enemy);
+        
+        // Drawing score
+        text.setPosition(sf::Vector2f(ScreenWidth() / 2 - 64, ScreenHeight() / 5));
+        text.setString(std::to_string(Scores[0]));
         Draw(text);
 
+        text.setPosition(sf::Vector2f(ScreenWidth() / 2 + 64, ScreenHeight() / 5));
+        text.setString(std::to_string(Scores[1]));
+        Draw(text);
 
         return true;
     }

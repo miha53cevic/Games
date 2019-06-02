@@ -3,7 +3,7 @@
 // Contact: miha53cevic@gmail.com
 // Date: 22.5.2019.
 //
-// Compile command: g++ -std=c++17 -o app Server/server.cpp main.cpp $(pkg-config --libs --cflags sfml-system sfml-network sfml-graphics)
+// Compile command: g++ -std=c++17 -o3 -o app Server/server.cpp main.cpp $(pkg-config --libs --cflags sfml-system sfml-network sfml-graphics)
 //
 
 #include <iostream>
@@ -48,11 +48,22 @@ int main()
         // Otherwise the starting time in gameUpdate is higher because of the wait
         server.GetElapsedTime();
 
+        // Tickrate is 60 updates per second
+        sf::Clock tick;
+        sf::Time elapsed;
+        float tickrate = 1.0f / 60.0f;
+
         while (server.isRunning())
         {
-            server.ReceiveData();
-            server.SendData();
-            server.UpdateGame(150.0f);
+            if (elapsed.asSeconds() >= tickrate)
+            {
+                elapsed -= elapsed;
+
+                server.ReceiveData();
+                server.SendData();
+                server.UpdateGame(150.0f);
+            }
+            else elapsed += tick.restart();
         }
     }
     else
