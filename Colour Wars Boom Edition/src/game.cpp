@@ -21,7 +21,7 @@ void Game::Update()
 {
 	//Event System
 	m_window.Update();
-	m_editor.Update();
+	m_editor.Update(m_window.getWindow());
 }
 
 void Game::Render()

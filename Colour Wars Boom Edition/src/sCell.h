@@ -4,6 +4,11 @@
 
 #include "sResourceManager.h"
 
+enum class CellType { EMPTY, WALL, FLOOR, SPAWN_POINT, };
+
+// Global because all cell textures should be 32x32
+const int CELL_SIZE = 32;
+
 class sCell
 {
 public:
@@ -14,7 +19,8 @@ public:
 		m_spr.setTexture(sResourceManager::get().getTexture(texName));
 		m_spr.setPosition(m_position);
 
-		m_block = false;
+		m_block		= false;
+		m_tex_name	= texName;
 	}
 
 	void setBlocking(bool choice)
@@ -32,9 +38,14 @@ public:
 		window->draw(m_spr);
 	}
 
+	sf::Vector2f &getPosition() { return m_position; }
+	std::string getTexName() { return m_tex_name; }
+
 private:
 	sf::Sprite		m_spr;
 	sf::Vector2f	m_position;
+
+	std::string		m_tex_name;
 
 	bool			m_block;
 };

@@ -38,6 +38,16 @@ public:
 		}
 
 		std::cout << "Loaded " << m_textures.size() << " texture(s)\n";
+
+		// Load font
+		if (!m_font.loadFromFile("fonts/consola.ttf"))
+		{
+			// Error
+		}
+		else std::cout << "Loaded font\n";
+
+		// Close file
+		config.close();
 	}
 
 	// static functions -> can be called with sResourceManager::get()
@@ -60,7 +70,12 @@ public:
 		else return m_textures.at("error");
 	}
 
+	// Get font
+	sf::Font &getFont() { return m_font; }
+
 private:
 	std::map<std::string, sf::Texture> m_textures;
+
+	sf::Font m_font;
 };
 
