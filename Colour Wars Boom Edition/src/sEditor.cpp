@@ -1,6 +1,7 @@
 #include "sEditor.h"
 
 sEditor::sEditor(sf::Vector2u screenSize)
+	: m_toolbarKey(sf::Keyboard::Key::G, 0.2f)
 {
 	m_mapSize.x = screenSize.x;
 	m_mapSize.y = screenSize.y;
@@ -18,17 +19,25 @@ sEditor::sEditor(sf::Vector2u screenSize)
 	}
 
 	// Save and load buttons
-	sButton save({ 0,  0 }, 32, "Save", sf::Color(255, 216, 0));
-	sButton load({ 32*4, 0 }, 32, "Load", sf::Color(255, 216, 0));
+	m_UI.push_back(sButton({ 0,  0 }, 32, "Save", sf::Color(255, 216, 0)));
+	m_UI.push_back(sButton({ 32 * 4, 0 }, 32, "Load", sf::Color(255, 216, 0)));
+	m_UI.push_back(sButton({ (float)screenSize.x - (32 * 4), 48 }, 32, "Wall", sf::Color(0, 148, 255)));
+	m_UI.push_back(sButton({ (float)screenSize.x - (32 * 4), 96 }, 32, "Floor", sf::Color(0, 148, 255)));
+	m_UI.push_back(sButton({ (float)screenSize.x - (32 * 4), 144 }, 32, "Spawn", sf::Color(0, 148, 255)));
+	m_UI.push_back(sButton({ (float)screenSize.x - (32 * 4), 192 }, 32, "Empty", sf::Color(0, 148, 255)));
 
-	m_buttons.push_back(save);
-	m_buttons.push_back(load);
+	// Default settings
+	m_selectedType	= "empty_cell";
 }
 
 void sEditor::Update(sf::RenderWindow* window)
 {
-	for (auto &i : m_buttons)
+	for (auto &i : m_UI)
 	{
+		// If the UI has been clicked set flag
+		if (i.isClicked(window))
+			m_selecting = true;
+
 		if (i.getString() == "Save")
 		{
 			if (i.isClicked(window))
@@ -51,12 +60,60 @@ void sEditor::Update(sf::RenderWindow* window)
 				Load(name);
 			}
 		}
+		else if (i.getString() == "Wall")
+		{
+			if (i.isClicked(window))
+				m_selectedType = "default_wall";
+		}
+		else if (i.getString() == "Floor")
+		{
+			if (i.isClicked(window))
+				m_selectedType = "default_floor";
+		}
+		else if (i.getString() == "Spawn")
+		{
+			if (i.isClicked(window))
+				m_selectedType = "default_spawn_point";
+		}
+		else if (i.getString() == "Empty")
+		{
+			if (i.isClicked(window))
+				m_selectedType = "empty_cell";
+		}
 	}
 }
 
-void sEditor::HandleInput()
+void sEditor::HandleInput(sf::RenderWindow& window)
 {
+	// Hide or show UI
+	if (m_toolbarKey.isKeyPressed())
+	{
+		for (auto &i : m_UI)
+		{
+			if (i.isVisible())
+				i.setVisible(false);
+			else i.setVisible(true);
+		}
+	}
 
+	// Place Selected Cell Type
+	// m_selecting is used because if you choose something on the UI
+	// it places the cell even do you didn't want that
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !m_selecting)
+	{
+		// Get selected cell COORDS
+		int x = sf::Mouse::getPosition(window).x / CELL_SIZE;
+		int y = sf::Mouse::getPosition(window).y / CELL_SIZE;
+
+		int coord = Convert2Dto1D::convert(x, y, m_mapSize.x / CELL_SIZE);
+
+		m_map.at(coord).ChangeTexture(m_selectedType);
+
+		if (m_selectedType == "default_wall")
+			m_map.at(coord).setBlocking(true);
+		else m_map.at(coord).setBlocking(false);
+	}
+	else m_selecting = false;
 }
 
 void sEditor::Draw(sf::RenderWindow* window)
@@ -68,7 +125,7 @@ void sEditor::Draw(sf::RenderWindow* window)
 	}
 
 	// Draw Buttons / UI
-	for (auto &i : m_buttons)
+	for (auto &i : m_UI)
 	{
 		i.Draw(window);
 	}

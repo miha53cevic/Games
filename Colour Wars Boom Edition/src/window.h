@@ -18,7 +18,7 @@ public:
 
 	void Draw(sf::Drawable& l_drawable);
 
-	sf::Event* Update();
+	void Update();
 
 	sf::Vector2u getSize();
 	sf::RenderWindow* getWindow();

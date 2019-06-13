@@ -36,7 +36,7 @@ void Window::Draw(sf::Drawable& l_drawable)
 	m_window.draw(l_drawable);
 }
 
-sf::Event* Window::Update()
+void Window::Update()
 {
 	sf::Event event;
 
@@ -47,8 +47,6 @@ sf::Event* Window::Update()
 			bIsDone = true;
 		}
 	}
-
-	return &event;
 }
 
 sf::Vector2u Window::getSize()

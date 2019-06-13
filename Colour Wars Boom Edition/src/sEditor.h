@@ -8,13 +8,16 @@
 #include "sCell.h"
 #include "sButton.h"
 
+#include "ToggleKey.h"
+#include "Util.h"
+
 class sEditor
 {
 public:
 	sEditor(sf::Vector2u screenSize);
 
 	void Update(sf::RenderWindow* window);
-	void HandleInput();
+	void HandleInput(sf::RenderWindow& window);
 	void Draw(sf::RenderWindow* window);
 
 	void Save(std::string mapName);
@@ -23,10 +26,14 @@ public:
 private:	
 	std::vector<sCell> m_map;
 
-	CellType m_selectedType;
+	std::string m_selectedType;
 
-	std::vector<sButton> m_buttons;
+	std::vector<sButton> m_UI;
+
+	bool m_selecting;
 
 	sf::Vector2i m_mapSize;
+
+	ToggleKey m_toolbarKey;
 };
 

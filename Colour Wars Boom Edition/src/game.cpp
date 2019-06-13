@@ -14,7 +14,7 @@ Window* Game::getWindow()
 void Game::HandleInput()
 {
 	//input
-	m_editor.HandleInput();
+	m_editor.HandleInput(*m_window.getWindow());
 }
 
 void Game::Update()

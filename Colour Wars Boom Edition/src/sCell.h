@@ -4,8 +4,6 @@
 
 #include "sResourceManager.h"
 
-enum class CellType { EMPTY, WALL, FLOOR, SPAWN_POINT, };
-
 // Global because all cell textures should be 32x32
 const int CELL_SIZE = 32;
 
@@ -36,6 +34,12 @@ public:
 	void Draw(sf::RenderWindow* window)
 	{
 		window->draw(m_spr);
+	}
+
+	void ChangeTexture(std::string texName)
+	{
+		m_spr.setTexture(sResourceManager::get().getTexture(texName));
+		m_tex_name = texName;
 	}
 
 	sf::Vector2f &getPosition() { return m_position; }
