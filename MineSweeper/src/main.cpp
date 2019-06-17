@@ -14,7 +14,7 @@
 
 enum class CELL_STATE
 {
-	CLOSED, OPENED, FLAGGED, BOMB
+	CLOSED, OPENED, BOMB
 };
 
 struct sCell
@@ -30,6 +30,8 @@ struct sCell
 		sprite.setPosition(pos);
 
 		neighbour_count = 0;
+
+		flagged = false;
 	}
 
 	void ChangeTexture(std::string texName, sf::IntRect rect)
@@ -41,6 +43,8 @@ struct sCell
 	sf::RectangleShape sprite;
 
 	int neighbour_count;
+
+	bool flagged;
 
 	CELL_STATE state;
 };
@@ -111,14 +115,14 @@ protected:
 				int x = sf::Mouse::getPosition(*getWindow()).x / CELL_SIZE;
 				int y = sf::Mouse::getPosition(*getWindow()).y / CELL_SIZE;
 
-				if (m_board.at(convertCoord(x, y)).state == CELL_STATE::CLOSED)
+				if (m_board.at(convertCoord(x, y)).state != CELL_STATE::OPENED && !m_board.at(convertCoord(x, y)).flagged)
 				{
-					m_board.at(convertCoord(x, y)).state = CELL_STATE::FLAGGED;
+					m_board.at(convertCoord(x, y)).flagged = true;
 					m_board.at(convertCoord(x, y)).ChangeTexture("flag", sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(SPRITE_SIZE, SPRITE_SIZE)));
 				}
-				else if (m_board.at(convertCoord(x, y)).state == CELL_STATE::FLAGGED)
+				else if (m_board.at(convertCoord(x, y)).flagged)
 				{
-					m_board.at(convertCoord(x, y)).state = CELL_STATE::CLOSED;
+					m_board.at(convertCoord(x, y)).flagged = false;
 					m_board.at(convertCoord(x, y)).ChangeTexture("closed_cell", sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(SPRITE_SIZE, SPRITE_SIZE)));
 				}
 			}
