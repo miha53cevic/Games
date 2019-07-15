@@ -1,0 +1,7 @@
+D:\VS Studio Projects\CSharp Projects\CSharpConsoleSnake\bin\Debug\CSharpConsoleSnake.exe.config
+D:\VS Studio Projects\CSharp Projects\CSharpConsoleSnake\bin\Debug\CSharpConsoleSnake.exe
+D:\VS Studio Projects\CSharp Projects\CSharpConsoleSnake\bin\Debug\CSharpConsoleSnake.pdb
+D:\VS Studio Projects\CSharp Projects\CSharpConsoleSnake\obj\Debug\CSharpConsoleSnake.csprojAssemblyReference.cache
+D:\VS Studio Projects\CSharp Projects\CSharpConsoleSnake\obj\Debug\CSharpConsoleSnake.csproj.CoreCompileInputs.cache
+D:\VS Studio Projects\CSharp Projects\CSharpConsoleSnake\obj\Debug\CSharpConsoleSnake.exe
+D:\VS Studio Projects\CSharp Projects\CSharpConsoleSnake\obj\Debug\CSharpConsoleSnake.pdb
