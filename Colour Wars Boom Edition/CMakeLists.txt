@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Name of the project
-project(Derpy_Bird)
+project(ColourWarsBE)
 
 #set(CMAKE_BUILD_TYPE Debug)
 #set(CMAKE_BUILD_TYPE Release)
@@ -11,17 +11,12 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Set source .cpp files
 set(SOURCES 
-    Engine/App.cpp
-    GUI/TextBox.cpp
-    StateMachine/StateMachine.cpp
-    main.cpp
-    # Derpy bird specific
-    States/StateMenu.cpp
-    States/StatePlaying.cpp
-    Entity/Bird.cpp
-    Entity/Ground.cpp
-    Entity/Pipe.cpp
-    States/StateEnd.cpp
+    src/main.cpp
+    src/game.cpp
+    src/sBomb.cpp
+    src/sEditor.cpp
+    src/sPlayer.cpp
+    src/window.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
